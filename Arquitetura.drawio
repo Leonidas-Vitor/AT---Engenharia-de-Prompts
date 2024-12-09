@@ -1,0 +1,60 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/25.0.2 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="25.0.2">
+  <diagram name="Página-1" id="sNnxdU32FTQnBIWaRaZz">
+    <mxGraphModel dx="2074" dy="836" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="X5v521jsQTm0wNgGksx9-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="X5v521jsQTm0wNgGksx9-1" target="X5v521jsQTm0wNgGksx9-7">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X5v521jsQTm0wNgGksx9-1" value="Coleta de dados via API Rest" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="X5v521jsQTm0wNgGksx9-2" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;" vertex="1" parent="1">
+          <mxGeometry x="160" y="360" width="880" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="X5v521jsQTm0wNgGksx9-3" value="" style="endArrow=none;dashed=1;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="20" y="340" as="sourcePoint" />
+            <mxPoint x="1042" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X5v521jsQTm0wNgGksx9-4" value="dashboard.py" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="370" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="X5v521jsQTm0wNgGksx9-6" value="dataprep.py" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="300" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="X5v521jsQTm0wNgGksx9-7" value="Dados coletados em formato parquet" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="330" y="180" width="110" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="X5v521jsQTm0wNgGksx9-9" value="Streamlit Cache" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="560" y="370" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="X5v521jsQTm0wNgGksx9-10" value="streamlit" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="180" y="370" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="X5v521jsQTm0wNgGksx9-11" value="Overview" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="730" y="440" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="X5v521jsQTm0wNgGksx9-12" value="Despesas" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="610" y="660" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="X5v521jsQTm0wNgGksx9-13" value="Proposições" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="830" y="660" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="X5v521jsQTm0wNgGksx9-14" value="Arquitetura" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="300" y="440" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="X5v521jsQTm0wNgGksx9-15" value="Criação de textos com LLM" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="170" y="660" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="X5v521jsQTm0wNgGksx9-16" value="&lt;strong id=&quot;yui_3_17_2_1_1733752289807_193&quot;&gt;Processamento dos dados de deputados&lt;/strong&gt;" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="390" y="660" width="200" height="200" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

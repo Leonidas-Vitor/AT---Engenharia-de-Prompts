@@ -627,7 +627,7 @@ def ShowPromptsOverview():
                 st.image("images/Gemini_Prints/Gemini_2_1.png")
             with cols[1]:
                 st.image("images/Gemini_Prints/Gemini_2_2.png")
-                st.image("images/Gemini_Prints/Gemini_2_3.png")
+                st.image("images/Gemini_Prints/Gemini_2_3_a.png")
             with cols[2]:
                 st.image("images/Gemini_Prints/Gemini_3_1.png")
                 st.image("images/Gemini_Prints/Gemini_3_2.png")

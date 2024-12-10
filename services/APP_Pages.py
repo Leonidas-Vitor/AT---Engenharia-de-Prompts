@@ -13,11 +13,12 @@ import io
 #-----------------------------------------UTILIDADES
 @st.cache_data
 def LoadConfigs():
-    with open('configs/config.json', 'r') as arquivo:
-        st.session_state['config'] = json.loads(arquivo.read())
+    #with open('configs/config.json', 'r') as arquivo:
+    #    st.session_state['config'] = json.loads(arquivo.read())
 
-    with open('configs/gemini_config.yaml', 'r') as arquivo:
-            st.session_state['gemini_config'] = yaml.safe_load(arquivo)
+    #with open('configs/gemini_config.yaml', 'r') as arquivo:
+    #        st.session_state['gemini_config'] = yaml.safe_load(arquivo)
+    pass
 
 #-----------------------------------------PÁGINAS & ABAS
 def ShowIntro():

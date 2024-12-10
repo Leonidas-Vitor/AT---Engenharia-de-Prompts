@@ -121,14 +121,14 @@ def ShowCreateTextsWithLLM():
                  *Faça um texto curto, de até 2 parágrafos, explicando a Câmara dos Deputados do Brasil. Gere um arquivo config.yaml 
                  com a resposta usando como chave 'overview_summary'*
                  ''')
-        
-        with open('../configs/data/config.yaml ', 'r', encoding='utf-8') as arquivo:
+        path = os.path.join(os.path.dirname(__file__),'..' ,'configs', 'data', 'config.yaml')
+        with open('configs/data/config.yaml', 'r', encoding='utf-8') as arquivo:
             r = yaml.safe_load(arquivo)
         cols = st.columns(2)
         with cols[0]:
             st.write('**Resposta final:**')
             st.code('''
-                    with open('configs/data/config.yaml ', 'r', encoding='utf-8') as arquivo:
+                    with open('configs/data/config.yaml', 'r', encoding='utf-8') as arquivo:
                         r = yaml.safe_load(arquivo)
                     ''')
             st.write(r['overview_summary'])

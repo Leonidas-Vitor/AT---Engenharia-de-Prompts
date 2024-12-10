@@ -21,6 +21,6 @@ streamlit_extras==0.5.0
 #kaleido==0.2.1
 #nbformat==5.10.4
 seaborn==0.13.2
-faiss==1.9.0
+faiss-cpu==1.9.0
 sentence_transformers==3.3.1
 python-dotenv==1.0.1

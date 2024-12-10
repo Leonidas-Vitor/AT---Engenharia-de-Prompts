@@ -62,7 +62,7 @@ def ShowMisc():
             'Questão 8',
             'Questão 9'])
         with tab1:
-            st.write("Arquitetura da aplicação")
+            ShowArchitecture()
         with tab2:
             ShowCreateTextsWithLLM()
         with tab3:
@@ -83,7 +83,40 @@ def ShowMisc():
     return container
 
 def ShowArchitecture():
-    pass
+    container = st.container(border=True)
+    with container:
+        st.subheader("Arquitetura", divider=True)
+        
+        st.write('**Explicação**')
+
+        st.write('''
+                    Os dados foram inicialmente coletados via API pelo dataprep.py, sendo processados, conforme enunciado, via prompt
+                    pela Claude. O resumo das proposições foi feita utilizando o Gemini, com a geração de resumos dos chunks e um resumo final. 
+                    Para criar a base vetorial, foi utilizado um jupyter notebook a parte para gerar o arquivo vetorial e a base dos textos para ser
+                    consumida pela aplicação.
+
+                    A aplicação tem acesso aos dados processados e a base vetorial, em pastas específicas, que são após carregadas armazenadas em cache
+                    para serem utilizadas nas páginas da aplicação. Para manter organizado o dashboard.py foi criada duas bibliotecas de funções,
+                    APP_Pages.py e GeminiMethods.py, onde APP_Pages.py cria as páginas e GeminiMethods.py contém as funções do Gemini.
+                    
+                    Conforme enunciado a base das abas foi criada via LLM, utilizando GEMINI.
+
+                    Abaixo das abas principais, foi criada as abas de miscelânea, onde são apresentadas as respostas das questões do AT de forma
+                    que fique tudo centralizado na mesma aplicação.
+                    ''')
+        st.image("images/Misc/Arquitetura.png", use_container_width=True)
+        st.divider()
+
+        st.write('''**LLMs**''')
+        st.write('''
+                LLMs são modelos de aprendizado de máquina treinado com grandes quantidades de textos utilizando arquiteturas como a
+                Transformer (BERT, GPT, etc) que são capazes de gerar textos de forma coerente e com qualidade através da identificação
+                de relações contextuais. 
+
+                Graças a essa capacidade, é possível utilizar LLMs para gerar textos, resumos, traduções, entre outras tarefas de NLP
+                de forma muito eficiente e com ótimos resultados.
+                ''')
+
 
 def ShowCreateTextsWithLLM():
     container = st.container(border=True)
@@ -122,13 +155,13 @@ def ShowCreateTextsWithLLM():
                  com a resposta usando como chave 'overview_summary'*
                  ''')
         #path = os.path.join(os.path.dirname(__file__),'..' ,'configs', 'data', 'config.yaml')
-        with open('configs/data/config.yaml', 'r', encoding='utf-8') as arquivo:
+        with open('data/config.yaml', 'r', encoding='utf-8') as arquivo:
             r = yaml.safe_load(arquivo)
         cols = st.columns(2)
         with cols[0]:
             st.write('**Resposta final:**')
             st.code('''
-                    with open('configs/data/config.yaml', 'r', encoding='utf-8') as arquivo:
+                    with open('data/config.yaml', 'r', encoding='utf-8') as arquivo:
                         r = yaml.safe_load(arquivo)
                     ''')
             st.write(r['overview_summary'])

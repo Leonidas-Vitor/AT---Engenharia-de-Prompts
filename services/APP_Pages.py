@@ -3,6 +3,12 @@ import os
 import yaml
 import json
 import pandas as pd
+import matplotlib.pyplot as plt
+from services import GeminiMethods as gm
+from dotenv import load_dotenv
+import os
+import io
+
 
 #-----------------------------------------UTILIDADES
 @st.cache_data
@@ -24,50 +30,55 @@ def ShowIntro():
     
     with container:
         columns = st.columns([0.3,0.7])
-        with columns[0]:
-            st.image(path_to_logo,width=200)
-        with columns[1]:
-            st.markdown('''<h1 style='text-align: center; '><b>INSTITUTO INFNET</b></h1>''',unsafe_allow_html = True)
-            st.markdown(html_p % tuple([35,"ESCOLA SUPERIOR DE TECNOLOGIA"]),unsafe_allow_html=True)
-        
+        #with columns[0]:
+            #st.image(path_to_logo,width=200)
+        #with columns[1]:
+        st.markdown('''<h1 style='text-align: center; '><b>INSTITUTO INFNET</b></h1>''',unsafe_allow_html = True)
+        st.markdown(html_p % tuple([35,"ESCOLA SUPERIOR DE TECNOLOGIA"]),unsafe_allow_html=True)
+    
         st.divider()
         st.markdown(html_p % tuple([35,"AT - Engenharia de Prompts"]),unsafe_allow_html=True)
         st.markdown(html_p % tuple([25,'Aluno: Leônidas Almeida']),unsafe_allow_html = True)
         st.markdown(html_p % tuple([25,f'E-mail: <a href= mailto:{email}>{email}</a>']),unsafe_allow_html = True)
         st.markdown(html_p % tuple([25,f'GitHub Aplicação: <a href={github_link}>Link para o repositório</a>']),unsafe_allow_html = True)
 
-        st.divider()
-
-        st.markdown('**Instruções:**')
-        st.markdown('O trabalho está dividido em 3 partes: **Introdução**, **Miscelânea** e **Aplicação**.')
-        st.markdown('Na **Introdução** você encontrará informações sobre o trabalho e o autor.')
-        st.markdown('Na **Miscelânea** você encontrará informações sobre a arquitetura da aplicação, criação de textos com LLM, processamento dos dados de deputados, despesas e proposições.')
-        st.markdown('Na **Aplicação** você encontrará as abas interativas com aplicação de LLM')
-
     return container
 
+#----------------------------MISC
 def ShowMisc():
     container = st.container(border=True)
     with container:
         st.subheader("Miscelânea", divider=True)
         
-        with st.expander("Mostrar Miscelânea", expanded=True):
-            tab1, tab2, tab3, tab4, tab5  = st.tabs([
-                'Arquitetura da aplicação',
-                'Criação de textos com LLM',
-                'Processamento dos dados de deputados',
-                'Processamento dos dados de despesas',
-                'Processamento dos dados de proposições'])
-            with tab1:
-                st.write("Arquitetura da aplicação")
-            with tab2:
-                ShowCreateTextsWithLLM()
-            with tab3:
-                ShowProcessDeputies()
-            with tab4:
-                ShowProcessExpenses()
-            with tab5:
-                ShowPropositions()
+        #with st.expander("Mostrar Miscelânea", expanded=True):
+        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9  = st.tabs([
+            'Questão 1',
+            'Questão 2',
+            'Questão 3',
+            'Questão 4',
+            'Questão 5',
+            'Questão 6',
+            'Questão 7',
+            'Questão 8',
+            'Questão 9'])
+        with tab1:
+            st.write("Arquitetura da aplicação")
+        with tab2:
+            ShowCreateTextsWithLLM()
+        with tab3:
+            ShowProcessDeputies()
+        with tab4:
+            ShowProcessExpenses()
+        with tab5:
+            ShowPropositions()
+        with tab6:
+            ShowPromptsOverview()
+        with tab7:
+            ShowPromptsExpensesAndPropositions()
+        with tab8:
+            ShowAnswer()
+        with tab9:
+            ShowIAImage()
 
     return container
 
@@ -234,6 +245,19 @@ A composição atual exigirá habilidade política para construir maiorias e apr
                 a LLM foi capaz de entregar uma visão macro sobre a composição partidária na Câmara dos 
                 Deputados e como ela influência a política nacional.
                 ''')
+        
+        st.divider()
+        with st.expander('Galeria', expanded=True):
+            cols = st.columns(4)
+            with cols[0]:
+                st.image('images/Claude_Prints/Claude_1_1.png')
+                st.image('images/Claude_Prints/Claude_1_2.png')
+            with cols[1]:
+                st.image("images/Claude_Prints/Claude_3_1.png")
+            with cols[2]:
+                st.image("images/Claude_Prints/Claude_3_2.png")
+            with cols[3]:
+                st.image("images/Claude_Prints/Claude_3_3.png")
 
     return container
 
@@ -438,7 +462,24 @@ Esta análise destaca a necessidade de:
 - Transparência nos gastos de divulgação
 - Revisão dos custos administrativos
 ''')
+        
+        st.divider()
 
+        with st.expander('Galeria', expanded=True):
+            cols = st.columns(3)            
+            with cols[0]:
+                st.image("images/Claude_Prints/Claude_4_1.png")
+                st.image("images/Claude_Prints/Claude_4_2.png")
+                st.image("images/Claude_Prints/Claude_4_3.png")
+            with cols[1]:
+                st.image("images/Claude_Prints/Claude_4_4.png")
+                st.image("images/Claude_Prints/Claude_4_5.png")
+                st.image("images/Claude_Prints/Claude_4_6.png")
+            with cols[2]:
+                st.image("images/Claude_Prints/Claude_5_1.png")
+                st.image("images/Claude_Prints/Claude_5_2.png")
+                st.image("images/Claude_Prints/Claude_5_3.png")
+        
     return container
 
 
@@ -516,3 +557,477 @@ def ShowPropositions():
             st.write("**PROPOSICOES**")
             st.dataframe(df_proposicoes[df_proposicoes['codTema'] == 62]['ementa'], use_container_width=True)
 
+
+def ShowPromptsOverview():
+    container = st.container(border=True)
+    with container:
+        st.subheader("Chain-of-Thought", divider=True)
+        st.write('**1º PROMPT**')
+        st.write('''
+                 Você é um desenvolvedor python. Crie uma função que crie três tabs em 
+                 streamlit, Overview, Despesas e Proposições. Se limite a apenas gerar 
+                 o código comentado, não explique o código. 
+                 ''')
+        
+        st.write('**OBJETIVO**')
+        st.write('''
+                 Criar a base para a aplicação de streamlit, com as abas Overview, Despesas e Proposições.
+                 ''')
+        
+        st.divider()
+
+        st.write('**2º PROMPT**')
+        st.write('''
+                 Agora na aba de Overview, adicione uma descrição sobre uma aplicação que 
+                 analisa os dados públicos dos deputados, como suas despesas, proposições e 
+                 filiação partidária. Inclua também um texto que se encontra em 
+                 data/sumarizacao_proposicoes.json, onde temos três textos específicos que 
+                 queremos exibir, um para cada um das chaves 40, 46 e 62. Dentro de cada uma 
+                 dessas chaves temos dois tipos de texto, "Resumo" e "Resumo Consolidado", 
+                 busque e exiba apenas o "Resumo Consolidado", destacando a qual chave 
+                 (40, 46 e 62) ele pertence. Lembro que esse json é uma lista, como 
+                 [{'40': {'Resumo':text}}, {'40':{'Resumo Consolidado':texto}}...] e 
+                 é necessário checar se algum sub dicionário é do tipo None para evitar 
+                 erros na aplicação, além de aplicar eval() nos sub dicionários para caso 
+                 eles estejam sendo reconhecidos como string em vez de dict.
+                 
+                 Não esqueça de replicar os códigos anteriores e incluir as novas funções 
+                 solicitadas. 
+                 ''')
+        
+        st.write('**OBJETIVO**')
+        st.write('''
+                 Adicionar o recurso de exibir os resumos consolidados das proposições, foi necessário passar detalhes da estrutura do Json para que a LLM conseguisse 
+                 identificar os resumos corretamente.
+                 ''')
+        
+        st.divider()
+
+        st.write('**3º PROMPT**')
+        st.write('''
+                 Agora inclua na Aba Overview uma imagem localizada em 
+                 docs/distribuicao_deputados.png e o texto do json localizado em 
+                 data/insights_distribuicao_deputados.json, que tem como chave para o 
+                 texto "Analise_Claude". Coloque um título separando cada um dos elementos 
+                 da aba Overview, as proposições, imagem da distribuição e texto dos insights.
+                 Não esqueça de replicar o código anterior e apenas adicionar os novos recursos.
+                 ''')
+        
+        st.write('**OBJETIVO**')
+        st.write('''
+                 Concluir a aba Overview incluindo a imagem e o texto dos insights sobre a distribuição dos deputados. Além de incluir um título para cada elemento da aba.
+                 ''')
+        
+        st.divider()
+
+        with st.expander('Galeria', expanded=True):
+            cols = st.columns(4)
+            with cols[0]:
+                st.image("images/Gemini_Prints/Gemini_1.png")
+                st.image("images/Gemini_Prints/Gemini_2_1.png")
+            with cols[1]:
+                st.image("images/Gemini_Prints/Gemini_2_2.png")
+                st.image("images/Gemini_Prints/Gemini_2_3.png")
+            with cols[2]:
+                st.image("images/Gemini_Prints/Gemini_3_1.png")
+                st.image("images/Gemini_Prints/Gemini_3_2.png")
+            with cols[3]:
+                st.image("images/Gemini_Prints/Gemini_3_3.png")
+        
+    return container
+
+def ShowPromptsExpensesAndPropositions():
+    container = st.container(border=True)
+    with container:
+        st.subheader("Batch-prompting", divider=True)
+        st.write('**PROMPT**')
+        st.write('''
+                 Perfeito agora, vamos programar as abas de Despesas e Proposições.
+                 - Na aba de despesas adicione o texto do json localizado em 
+                 data/insights_despesas_deputados.json, onde a chave do texto é "Insights".
+                 - Também na de despesas, carregue o arquivo data/serie_despesas_diárias_deputados.parquet 
+                 e plot uma série temporal dessa gráfico para o deputado selecionado. Para selecionar o 
+                 deputado crie um st.selectbox. No arquivo data/serie_despesas_diárias_deputados.parquet 
+                 existem as colunas dataDocumento, idDeputado, tipoDespesa e valorDocumento
+                 - Agora na aba de Proposições, carregue a tabela em data/proposicoes_deputados.parquet 
+                 e a exiba
+                 - Também na aba de Proposições carregue e mostre o resumo em data/sumarizacao_proposicoes.json, 
+                 lembrando que você já carregou esse arquivo e precisamos exibir da mesma forma que na 
+                 aba de Overview.
+                 
+                 Não se esqueça dos títulos separando cada elemento.
+                 
+                 Não se esqueça de replicar todo o código anterior e apenas adicionar os novos recursos, especialmente a aba de Overview. 
+                 ''')
+        
+        st.write('**COMPARAÇÃO**')
+        st.write('''
+                 A técnica de Batch-prompting é mais recomendada para tarefas mais simples, onde
+                 ocorre uma repetição de ações, como traduzir textos, gerar gráficos, ou realizar
+                 análises simples. Enquanto que a técnica de Chain-of-Thought é melhor para tarefas
+                 mais complexas, onde é necessário um raciocínio mais elaborado, como a criação desse
+                 dashboard, onde é necessário criar uma aplicação interativa com diversas abas e 
+                 elementos com diferentes requisitos e funcionamentos, além das diferentes fontes de 
+                 dados com diferentes estruturas.
+                 ''')
+
+        st.divider()
+
+        with st.expander('Galeria', expanded=True):
+            cols = st.columns(3)
+            with cols[0]:
+                st.image("images/Gemini_Prints/Gemini_4_1.png")
+                st.image("images/Gemini_Prints/Gemini_4_2.png")
+            with cols[1]:
+                st.image("images/Gemini_Prints/Gemini_4_3.png")
+                st.image("images/Gemini_Prints/Gemini_4_4.png")
+            with cols[2]:
+                st.image("images/Gemini_Prints/Gemini_4_5.png")
+
+
+def ShowAnswer():
+    container = st.container(border=True)
+    with container:
+        st.subheader("Self-Ask", divider=True)
+        st.write('**A:**')
+        st.write('''
+                 A técnica de Self-Ask pode ser utilizada para que o modelo avalie se a base de dados
+                 vetorial FAISS forneceu os dados necessários para responder adequadamente a pergunta,
+                 "fazendo" com que a LLM avalie a qualidade dos dados fornecidos e só responda se a
+                 base de dados forneceu os dados necessários para responder a pergunta, evitando assim
+                 alucinaçõesç.
+                 ''')
+        
+        st.divider()
+
+        st.write('''**B**:''')
+        st.write('''
+                 Devido ao limite de 200 frases por texto, a LLM não conseguiu responder as perguntas
+                 1 e 2, pois não havia a totalidade das informações.
+
+                 Já para as perguntas 3, 4 e 5 a LLM conseguiu responder com certa assertividade.
+                 
+                 Na pergunta 3 a LLM respondeu como maior gasto a \"Manutenção de Escritório de Apoio\",
+                 que não está totalmente incorreto, pois é o segundo maior gasto, o que indica que os textos fornecidos
+                 não foram suficientes.
+
+                 Na pergunta 4 a LLM a resposta contém informações corretas, mas não é a resposta ideal, pois
+                 há repetições de informações e a resposta não é clara.
+
+                 Na pergunta 5 a LLM respondeu corretamente.
+                 ''')
+        
+        st.divider()
+
+        with st.expander('Galeria', expanded=True):
+            cols = st.columns(3)
+            with cols[0]:
+                st.image("images/Dashboard_Prints/D_1.png")
+                st.image("images/Dashboard_Prints/D_2.png")
+            with cols[1]:
+                st.image("images/Dashboard_Prints/D_3.png")
+                st.image("images/Dashboard_Prints/D_4.png")
+            with cols[2]:
+                st.image("images/Dashboard_Prints/D_5.png")
+
+
+def ShowIAImage():
+    container = st.container(border=True)
+    with container:
+        st.subheader("Geração de Imagens com Prompts", divider=True)
+        st.write('**CÓDIGO**')
+        st.code('''
+from diffusers import StableDiffusionPipeline
+import torch
+
+def generate_image(prompt, output_path="generated_image.png"):
+    pipeline = StableDiffusionPipeline.from_pretrained(
+        "CompVis/stable-diffusion-v1-4",
+        torch_dtype=torch.float16,
+        revision="fp16" 
+    )
+                
+    pipeline = pipeline.to("cuda"))
+    image = pipeline(prompt).images[0]
+
+    image.save(output_path)
+    print(f"Imagem salva em: {output_path}")
+                ''')
+        cols = st.columns(2)
+        with cols[0]:
+            st.write('**1º PROMPT**: A rich caramel mutt with monocle')
+            st.image("images/IA_Images/caramelo_rico.png")
+        with cols[1]:
+            st.write('**2º PROMPT**: Dog breed Cocker spaniel astronaut')
+            st.image("images/IA_Images/cocker_atronauta.png")
+
+        st.divider()
+
+        st.write('**A:**')
+        st.write('''
+                 - Stable Diffusion: Baseado em redes neuras difusionais, que adiciona gradualmente ruído
+                 a uma imagem e gerar imagens a partir do ruído. Tem como vantagem ser Open Source e 
+                 poder ser utilizado localmente com hardware acessível. Suas principais limitações são
+                 a dependencia da qualidade do prompt e os artefatos/falta de coerência nas imagens geradas.
+
+                 - DALL-E: Baseado em transformers e combina modelos de linguagem (como o GPT), utilizando CLIP (Constrative Language-Image Pre-training) 
+                 para conectar texto e imagem, melhorando a compreenmsão do modelo, sendo uma das suas principais vantagens.
+                 Outras vantagens estão na facilidade de uso e a consistência na composição. Suas principais limitações são a dependência da Nuvem,
+                 os filtros de conteúdo e a falta de personalização, consequências de ser um modelo proprietário.
+
+                 - MidJourney provavelmente uma combinação de modelos de difusão e aprendizado profundo, com foco em geração de imagens estilizadas 
+                 e artísticas. Suas principais vantagens são a geração de imagens únicas e estilizadas, com um toque artístico e a comunidade ativa.
+                 Suas principais limitações são a dependência da Nuvem, o licenciamento restrito e a falta de personalização, consequências de ser um 
+                 modelo proprietário.
+                 ''')
+        
+        st.divider()
+
+        st.write('**B:**')
+        cols = st.columns(2)
+        with cols[0]:
+            st.write('''**1º PROMPT**: A rich caramel mutt with monocle, Baroque-style painting, textured brushstrokes, 
+                     dramatic chiaroscuro lighting, earthy tones''')
+            st.image("images/IA_Images/caramelo_rico_v2.png")
+
+            st.write('''**2º PROMPT**:A rich caramel mutt with monocle, Baroque-style painting, textured brushstrokes, dramatic chiaroscuro lighting, earthy tones, 
+perfect symmetry, centered perspective, mystical style''')
+            st.image("images/IA_Images/caramelo_rico_v3.png")
+            
+            st.write('''**3º PROMPT**: A rich caramel mutt with monocle, Baroque-style painting, textured brushstrokes, dramatic chiaroscuro lighting, 
+earthy tones, blurred background, cinematic style, soft lighting''')
+            st.image("images/IA_Images/caramelo_rico_v4.png")
+
+        with cols[1]:
+            st.write('''**1º PROMPT**: Dog breed Cocker spaniel astronaut, high-quality digital 
+                     illustration, sharp lines, vibrant colors, cyberpunk style.''')
+            st.image("images/IA_Images/cocker_atronauta_v2.png")
+
+            st.write('''**2º PROMPT**: Dog breed Cocker spaniel astronaut, high-quality digital illustration, sharp lines, vibrant colors, cyberpunk style, 
+  no old-fashioned elements, no vegetation, no pastel colors, no inconsistent lighting.''')
+            st.image("images/IA_Images/cocker_atronauta_v3.png")
+
+            st.write('''**3º PROMPT**: Dog breed Cocker spaniel astronaut, high-quality digital illustration, sharp lines, vibrant colors, cyberpunk style, 
+  no face distortions, no deformed hands, no irrelevant background objects, no overly saturated colors.''')
+            st.image("images/IA_Images/cocker_atronauta_v4.png")
+
+        st.divider()
+        st.write('**AVALIAÇÃO**')
+        st.write('''
+                 A inclusão de estilo visual e composição melhoraram substancialmente as imagens, principalmente
+                 o estilo visual, que geraram o melhor resultado (primeiros prompts), a inclusão de composição e 
+                 prompts negativos (quatro últimos prompts) geraram resultados, como adicionar um juba no vira-lata caramelo
+                 na tentativa de trazer um ar mais místico para imagem, por exemplo, contudo, ainda é possível ver distorções
+                 e falhas aparentes nas imagens geradas. 
+                    ''')
+
+
+#---------------------------APLICAÇÃO
+
+import streamlit as st
+import json
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def carregar_dados_sumarizacao(arquivo):
+    """Carrega os dados do arquivo JSON e retorna uma lista de dicionários.
+
+    Args:
+        arquivo (str): Nome do arquivo JSON.
+
+    Returns:
+        list: Lista de dicionários com os dados da sumarização.
+    """
+
+    with open(arquivo, 'r', encoding='utf-8') as f:
+        dados = json.load(f)
+    return dados
+
+def exibir_sumarizacao_proposicoes(dados):
+    """Exibe o resumo consolidado das proposições para as chaves 40, 46 e 62.
+
+    Args:
+        dados (list): Lista de dicionários com os dados da sumarização.
+    """
+
+    for dado in dados:
+        for chave, valor in dado.items():
+            if chave in ['40', '46', '62']:
+                if valor is not None and 'Resumo Consolidado' in valor:
+                    valor = eval(str(valor))  # Converte para dicionário se necessário
+                    st.write(f"**Chave {chave}:**\n{valor['Resumo Consolidado']}")
+
+def carregar_insights_distribuicao(arquivo):
+    """Carrega os insights sobre a distribuição de deputados.
+
+    Args:
+        arquivo (str): Nome do arquivo JSON.
+
+    Returns:
+        str: Texto dos insights.
+    """
+
+    with open(arquivo, 'r', encoding='utf-8') as f:
+        dados = json.load(f)
+    return dados['Analise_Claude']
+
+def carregar_insights_despesas(arquivo):
+    """Carrega os insights sobre as despesas dos deputados.
+
+    Args:
+        arquivo (str): Nome do arquivo JSON.
+
+    Returns:
+        str: Texto dos insights.
+    """
+
+    with open(arquivo, 'r', encoding='utf-8') as f:
+        dados = json.load(f)
+    return dados['Insights']
+
+def criar_tabs():
+    """
+    Cria três tabs no Streamlit: Overview, Despesas e Proposições.
+
+    Returns:
+        None
+    """
+
+    tab1, tab2, tab3 = st.tabs(["Overview", "Despesas", "Proposições"])
+
+    with tab1:
+        st.title("Visão Geral")
+
+        # Proposições
+        st.header("Análise das Proposições")
+        dados_sumarizacao = carregar_dados_sumarizacao('data/sumarizacao_proposicoes.json')
+        exibir_sumarizacao_proposicoes(dados_sumarizacao)
+
+        # Imagem da Distribuição
+        st.header("Distribuição dos Deputados")
+        image = plt.imread("docs/distribuicao_deputados.png")
+        st.image(image, caption="Distribuição dos Deputados por Partido")
+
+        # Insights sobre a Distribuição
+        st.header("Insights sobre a Distribuição")
+        insights = carregar_insights_distribuicao('data/insights_distribuicao_deputados.json')
+        st.write(insights)
+
+    with tab2:
+        st.title("Despesas")
+
+        # Insights sobre as Despesas
+        insights_despesas = carregar_insights_despesas('data/insights_despesas_deputados.json')
+        st.write(insights_despesas)
+
+        # Gráfico de Série Temporal das Despesas
+        df_despesas = pd.read_parquet('data/serie_despesas_diárias_deputados.parquet')
+        deputados = df_despesas['idDeputado'].unique()
+        deputado_selecionado = st.selectbox('Selecione um Deputado:', deputados)
+
+        df_deputado = df_despesas[df_despesas['idDeputado'] == deputado_selecionado]
+        plt.figure(figsize=(20, 5))
+        plt.plot(df_deputado['dataDocumento'], df_deputado['valorDocumento'])
+        plt.xlabel('Data')
+        plt.ylabel('Valor da Despesa')
+        plt.title(f'Série Temporal das Despesas do Deputado {deputado_selecionado}')
+        st.pyplot(plt)
+
+    with tab3:
+        st.title("Proposições")
+
+        # Tabela de Proposições
+        df_proposicoes = pd.read_parquet('data/proposicoes_deputados.parquet')
+        st.dataframe(df_proposicoes, use_container_width=True)
+
+        # Resumo das Proposições
+        st.header("Resumo das Proposições")
+        dados_sumarizacao = carregar_dados_sumarizacao('data/sumarizacao_proposicoes.json')
+        exibir_sumarizacao_proposicoes(dados_sumarizacao)
+
+        if os.getenv("GEMINI_KEY")  != '':
+            #Pedir um arquivo .env com as credenciais do Gemini
+            st.write('**CREDENCIAIS GEMINI**')
+            env = st.file_uploader('Insira o arquivo .env com as credenciais do Gemini, chave GEMINI_KEY', type='env')
+            if env:
+                st.write('Arquivo .env carregado com sucesso!')
+                with open("temp.env", "wb") as f:
+                    f.write(env.getbuffer())
+                
+                # Carregar as variáveis de ambiente do arquivo temporário
+                load_dotenv("temp.env")
+                
+                # Remover o arquivo temporário após carregar as variáveis
+                os.remove("temp.env")
+
+                ShowChatWithGemini(os.getenv("GEMINI_KEY"))
+        else:
+            ShowChatWithGemini(os.getenv("GEMINI_KEY"))
+        
+
+
+max_msg_key = 'max'
+hist_key = 'hist'
+
+def WriteHistory(messages):
+
+    if max_msg_key not in st.session_state:
+        st.session_state[max_msg_key] = 0
+    if hist_key not in st.session_state:
+        st.session_state[hist_key] = []
+    try:
+        for history in st.session_state[hist_key]:
+            role = 'Usuário' if 'Usuário' in history else 'Assistente'
+            icon = 'user' if 'Usuário' in history else 'assistant'
+            messages.chat_message(icon).write(history[role])
+    except:
+        st.error('Erro ao escrever histórico')
+        pass
+
+
+
+def ShowChatWithGemini(api_key):
+    cols = st.columns([0.8,0.2])
+    geminiConfigs = gm.GetGeminiConfig('CHAT_CONFIG')
+    embedding_model = gm.load_embedding_model()
+    faiss = gm.load_faiss()
+    texts = gm.load_texts()
+    k = 200
+    with cols[0]:
+        messages = st.container(height=700)
+        WriteHistory(messages)
+        if st.session_state[max_msg_key] < 5:
+            if prompt := st.chat_input("Converse com o especialista python"):
+                st.session_state[hist_key].append({'Usuário':prompt})
+                messages.chat_message("user").write(prompt)
+
+                prompt_embedding = gm.vetorize_text(prompt, embedding_model)
+                distances, indices = faiss.search(prompt_embedding, k)
+
+                db_text = '\n'.join([f"- {texts[indices[0][i]]}" for i in range(k)])
+
+                response = gm.GetGeminiResponse({
+                    'model':geminiConfigs['model'], 
+                    'generation_config': geminiConfigs['generation_config'],
+                    'safety_settings' : geminiConfigs['safety_settings'],
+                    'system_instruction':geminiConfigs['system_instruction'].format(db_texts=db_text)},
+                    json.dumps(st.session_state[hist_key], ensure_ascii=False, indent=4),
+                    api_key)
+                
+                messages.chat_message("assistant").write(f"Echo: {response.text}")
+
+                st.session_state[hist_key].append({'Assistente':response.text})
+                st.session_state[max_msg_key] += 1
+        else:
+            st.write('Limite atingido, reinicia o chat para continuar')
+
+
+    with cols[1]:
+        st.write('Esse chat tem o limite de 5 interações, ao atingir o limite, reinicie o chat para continuar')
+        st.write(f'Interações: {st.session_state[max_msg_key]}/5')
+        if st.button('Reiniciar', key='reiniciar_10'):
+            st.session_state[max_msg_key] = 0
+            st.session_state[hist_key].clear()
+            st.rerun()
+        if st.session_state[max_msg_key] == 5:
+            st.warning('Limite atingido, reinicia o chat para continuar')

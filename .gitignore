@@ -205,3 +205,4 @@ pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,jupyternotebooks
 .streamlit/secrets.toml
+DB/bertimbau/

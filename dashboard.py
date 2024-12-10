@@ -20,13 +20,23 @@ APP_Pages.LoadConfigs()
 #pg.run()
 intro_container = APP_Pages.ShowIntro()
 
+with st.sidebar:
+    st.image("images/infnet-30-horizontal-branco.png", width=400)
+    with st.container(border=True):
+        st.subheader("Observações", divider=True)
+        st.markdown('O trabalho possui duas partes:')
+        st.markdown('1. **Aplicação**: Funções e recursos solicitados para a aplicação streamlit')
+        st.markdown('2. **Miscelânea**: Fotos e respostas para as demais questão do AT')
+
+        st.divider()
+
+        st.markdown('*As mesmas respostas da parte de miscelânea estão presentes no PDF do AT*')
+
+            
+
 aplication_container = st.container(border=True)
 with aplication_container:
     st.subheader("Aplicação", divider=True)
-    tab1, tab2 = st.tabs(['Arquitetura','Textos'])
-    with tab1:
-        st.write("Arquitetura")
-    with tab2:
-        st.write("Textos")
+    APP_Pages.criar_tabs()
 
 misc_container = APP_Pages.ShowMisc()
